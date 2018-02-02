@@ -1,6 +1,11 @@
 package kata;
 
 public class Cell {
+    public static enum Status{
+        DEAD,BEING_DEAD,ALIVE,BEING_ALIVE;
+    };
+
+    private Status status;
     private boolean isAlive;
     private Position position;
     public Cell(){
@@ -20,4 +25,5 @@ public class Cell {
     public Position getPosition() {
         return position;
     }
+
 }
