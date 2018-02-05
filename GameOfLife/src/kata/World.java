@@ -17,25 +17,56 @@ public class World {
 
     public void operate() {
         if(cells.isEmpty()) return;
+        List<Cell> livingCells = new ArrayList<>();
+        List<Cell> deadCells = new ArrayList<>();
+
         for(Cell cell:cells){
-            if(countNeighbours(cell)==2){
-                cell.setAlive(true);
+            if(countLivingNeighbours(cell)==2){
+                livingCells.add(cell);
             }else{
-                cell.setAlive(false);
+                deadCells.add(cell);
             }
+        }
+
+        for(Cell cell:livingCells){
+            cell.setAlive(true);
+        }
+        for(Cell cell:deadCells){
+            cell.setAlive(false);
         }
     }
 
-    private int countNeighbours(Cell targetCell) {
+    private int countLivingNeighbours(Cell targetCell) {
         int neighbourCount = 0;
         for(Cell cell:cells){
             if(cell==targetCell){
+                continue;
+            }
+            if(!cell.isAlive()){
                 continue;
             }
             if(cell.getPosition().x == targetCell.getPosition().x && cell.getPosition().y ==targetCell.getPosition().y-1){
                 neighbourCount++;
             }
             if(cell.getPosition().x == targetCell.getPosition().x && cell.getPosition().y ==targetCell.getPosition().y+1){
+                neighbourCount++;
+            }
+            if(cell.getPosition().y == targetCell.getPosition().y && cell.getPosition().x ==targetCell.getPosition().x+1){
+                neighbourCount++;
+            }
+            if(cell.getPosition().y == targetCell.getPosition().y && cell.getPosition().x ==targetCell.getPosition().x-1){
+                neighbourCount++;
+            }
+            if(cell.getPosition().y == targetCell.getPosition().y+1 && cell.getPosition().x ==targetCell.getPosition().x+1){
+                neighbourCount++;
+            }
+            if(cell.getPosition().y == targetCell.getPosition().y-1 && cell.getPosition().x ==targetCell.getPosition().x-1){
+                neighbourCount++;
+            }
+            if(cell.getPosition().y == targetCell.getPosition().y-1 && cell.getPosition().x ==targetCell.getPosition().x+1){
+                neighbourCount++;
+            }
+            if(cell.getPosition().y == targetCell.getPosition().y+1 && cell.getPosition().x ==targetCell.getPosition().x-1){
                 neighbourCount++;
             }
         }
