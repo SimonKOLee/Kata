@@ -17,21 +17,21 @@ public class World {
 
     public void operate() {
         if(cells.isEmpty()) return;
-        List<Cell> livingCells = new ArrayList<>();
-        List<Cell> deadCells = new ArrayList<>();
+        List<Cell> cellsBeingAlive = new ArrayList<>();
+        List<Cell> cellsBeingDead = new ArrayList<>();
 
         for(Cell cell:cells){
             if(countLivingNeighbours(cell)==2){
-                livingCells.add(cell);
+                cellsBeingAlive.add(cell);
             }else{
-                deadCells.add(cell);
+                cellsBeingDead.add(cell);
             }
         }
 
-        for(Cell cell:livingCells){
+        for(Cell cell:cellsBeingAlive){
             cell.setAlive(true);
         }
-        for(Cell cell:deadCells){
+        for(Cell cell:cellsBeingDead){
             cell.setAlive(false);
         }
     }
@@ -39,38 +39,25 @@ public class World {
     private int countLivingNeighbours(Cell targetCell) {
         int neighbourCount = 0;
         for(Cell cell:cells){
-            if(cell==targetCell){
+            if(cell==targetCell||!cell.isAlive()){
                 continue;
             }
-            if(!cell.isAlive()){
-                continue;
-            }
-            if(cell.getPosition().x == targetCell.getPosition().x && cell.getPosition().y ==targetCell.getPosition().y-1){
-                neighbourCount++;
-            }
-            if(cell.getPosition().x == targetCell.getPosition().x && cell.getPosition().y ==targetCell.getPosition().y+1){
-                neighbourCount++;
-            }
-            if(cell.getPosition().y == targetCell.getPosition().y && cell.getPosition().x ==targetCell.getPosition().x+1){
-                neighbourCount++;
-            }
-            if(cell.getPosition().y == targetCell.getPosition().y && cell.getPosition().x ==targetCell.getPosition().x-1){
-                neighbourCount++;
-            }
-            if(cell.getPosition().y == targetCell.getPosition().y+1 && cell.getPosition().x ==targetCell.getPosition().x+1){
-                neighbourCount++;
-            }
-            if(cell.getPosition().y == targetCell.getPosition().y-1 && cell.getPosition().x ==targetCell.getPosition().x-1){
-                neighbourCount++;
-            }
-            if(cell.getPosition().y == targetCell.getPosition().y-1 && cell.getPosition().x ==targetCell.getPosition().x+1){
-                neighbourCount++;
-            }
-            if(cell.getPosition().y == targetCell.getPosition().y+1 && cell.getPosition().x ==targetCell.getPosition().x-1){
+            if(isNeighbour(targetCell, cell)){
                 neighbourCount++;
             }
         }
         return neighbourCount;
+    }
+
+    private boolean isNeighbour(Cell targetCell, Cell cell) {
+        return (cell.getPosition().y == targetCell.getPosition().y-1 && cell.getPosition().x ==targetCell.getPosition().x)
+                ||(cell.getPosition().y ==targetCell.getPosition().y+1 && cell.getPosition().x == targetCell.getPosition().x)
+                ||(cell.getPosition().y == targetCell.getPosition().y && cell.getPosition().x ==targetCell.getPosition().x+1)
+                ||(cell.getPosition().y == targetCell.getPosition().y && cell.getPosition().x ==targetCell.getPosition().x-1)
+                ||(cell.getPosition().y == targetCell.getPosition().y+1 && cell.getPosition().x ==targetCell.getPosition().x+1)
+                ||(cell.getPosition().y == targetCell.getPosition().y-1 && cell.getPosition().x ==targetCell.getPosition().x-1)
+                ||(cell.getPosition().y == targetCell.getPosition().y-1 && cell.getPosition().x ==targetCell.getPosition().x+1)
+                ||(cell.getPosition().y == targetCell.getPosition().y+1 && cell.getPosition().x ==targetCell.getPosition().x-1);
     }
 
     public void add(Cell newCell, Position position) {

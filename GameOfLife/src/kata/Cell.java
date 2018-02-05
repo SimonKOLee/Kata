@@ -12,11 +12,9 @@ public class Cell {
     public void setAlive(boolean isAlive){
         this.isAlive = isAlive;
     }
-
     public void setPosition(Position position) {
         this.position = position;
     }
-
     public Position getPosition() {
         return position;
     }

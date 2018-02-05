@@ -240,6 +240,7 @@ public class WorldTest {
         assertTrue("Cell B",cellB.isAlive());
         assertTrue("Cell C",cellC.isAlive());
     }
+
 }
 
 
