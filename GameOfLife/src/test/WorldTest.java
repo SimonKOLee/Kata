@@ -267,6 +267,65 @@ public class WorldTest {
         assertTrue("Cell C",cellC.isAlive());
         assertTrue("Cell D",cellD.isAlive());
     }
+    /**
+     * Given a 2x2 world and  cellA live at position(0,0) and  CellB live at position (1,0)  and CellC live at position (0,1) in the world and CellD live at (1,1)
+     * When the world operate
+     * Then  all cells should be alive
+     */
+    @Test
+    public void testGiven2x2WorldAndCellAliveAt00AndCellBLiveAt10CellCLiveAt01CellDLiveAt11WhenTheWorldOperateThenAllCellsShouldBeAlive(){
+        World world = new World(2,2);
+        Cell cellA = new Cell();
+        Cell cellB = new Cell();
+        Cell cellC = new Cell();
+        Cell cellD = new Cell();
+
+        world.add(cellA,new Position(0,0));
+        world.add(cellB,new Position(1,0));
+        world.add(cellC,new Position(0,1));
+        world.add(cellD,new Position(1,1));
+
+        world.operate();
+
+        assertTrue("Cell A",cellA.isAlive());
+        assertTrue("Cell B",cellB.isAlive());
+        assertTrue("Cell C",cellC.isAlive());
+        assertTrue("Cell D",cellD.isAlive());
+    }
+
+
+    /**
+     * 1,1,1
+     * 1,1,-
+     *
+     * Given a 3x2 world and  cellA live at (0,0) and  CellB live at  (1,0)  and CellC live at  (2,0) and CellD live at (1,1) and  CellE live at (1.2)
+     * When the world operate
+     * Then  all  CellB and CellE should be dead
+     */
+    @Test
+    public void testGiven3x2WorldAndCellAliveAt00AndCellBLiveAt10CellCLiveAt01CellDLiveAt11CellEliveAt12WhenTheWorldOperateThenAllCellsShouldBeAlive(){
+        World world = new World(3,2);
+        Cell cellA = new Cell();
+        Cell cellB = new Cell();
+        Cell cellC = new Cell();
+        Cell cellD = new Cell();
+        Cell cellE = new Cell();
+
+        world.add(cellA,new Position(0,0));
+        world.add(cellB,new Position(1,0));
+        world.add(cellC,new Position(2,0));
+        world.add(cellD,new Position(0,1));
+        world.add(cellE,new Position(1,1));
+
+        world.operate();
+
+        assertTrue("Cell A",cellA.isAlive());
+        assertFalse("Cell B",cellB.isAlive());
+        assertTrue("Cell C",cellC.isAlive());
+        assertTrue("Cell D",cellD.isAlive());
+        assertFalse("Cell E",cellE.isAlive());
+
+    }
 
 }
 

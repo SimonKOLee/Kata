@@ -21,16 +21,13 @@ public class World {
         List<Cell> cellsBeingDead = new ArrayList<>();
 
         for(Cell cell:cells){
-            if(cell.isAlive()){
-                if(countLivingNeighbours(cell)==2){
-                    cellsBeingAlive.add(cell);
-                }else{
-                    cellsBeingDead.add(cell);
-                }
-            }else{
-                if(countLivingNeighbours(cell)==3){
-                    cellsBeingAlive.add(cell);
-                }
+            if(cell.isAlive()
+                    &&(countLivingNeighbours(cell)<2||countLivingNeighbours(cell)>3)){
+                cellsBeingDead.add(cell);
+            }
+            if((!cell.isAlive())
+                    &&countLivingNeighbours(cell)==3){
+                cellsBeingAlive.add(cell);
             }
         }
 
