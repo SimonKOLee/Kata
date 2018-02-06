@@ -241,6 +241,33 @@ public class WorldTest {
         assertTrue("Cell C",cellC.isAlive());
     }
 
+    /**
+     * Given a 2x2 world and  cellA live at position(0,0) and  CellB live at position (1,0)  and CellC live at position (0,1) in the world and CellD die at (1,1)
+     * When the world operate
+     * Then  all cells should be alive
+     */
+    @Test
+    public void testGiven2x2WorldAndCellAliveAt00AndCellBLiveAt10CellCLiveAt01CellDDieAt11WhenTheWorldOperateThenAllCellsShouldBeAlive(){
+        World world = new World(2,2);
+        Cell cellA = new Cell();
+        Cell cellB = new Cell();
+        Cell cellC = new Cell();
+        Cell cellD = new Cell();
+        cellD.setAlive(false);
+
+        world.add(cellA,new Position(0,0));
+        world.add(cellB,new Position(1,0));
+        world.add(cellC,new Position(0,1));
+        world.add(cellD,new Position(1,1));
+
+        world.operate();
+
+        assertTrue("Cell A",cellA.isAlive());
+        assertTrue("Cell B",cellB.isAlive());
+        assertTrue("Cell C",cellC.isAlive());
+        assertTrue("Cell D",cellD.isAlive());
+    }
+
 }
 
 
