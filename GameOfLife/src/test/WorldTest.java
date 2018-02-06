@@ -327,6 +327,24 @@ public class WorldTest {
 
     }
 
+    @Test
+    public void testShowCells(){
+        World world = new World(3,3);
+        world.add(new Cell(),new Position(0,0));
+        world.add(new Cell(),new Position(0,1));
+        world.add(new Cell(),new Position(0,2));
+        world.add(new Cell(),new Position(1,0));
+        world.add(new Cell(),new Position(1,1));
+        world.add(new Cell(),new Position(1,2));
+        world.add(new Cell(),new Position(2,0));
+        world.add(new Cell(),new Position(2,1));
+        world.add(new Cell(),new Position(2,2));
+
+        String expectedPattern = "1 1 1"+"\n"+"1 1 1"+"\n"+"1 1 1";
+        assertEquals(expectedPattern,world.getCellsPattern());
+
+
+    }
 }
 
 

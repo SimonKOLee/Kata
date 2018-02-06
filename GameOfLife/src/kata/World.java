@@ -75,4 +75,9 @@ public class World {
         newCell.setPosition(position);
         cells.add(newCell);
     }
+
+
+    public String getCellsPattern() {
+        return "";
+    }
 }
