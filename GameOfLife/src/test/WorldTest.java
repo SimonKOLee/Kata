@@ -342,7 +342,12 @@ public class WorldTest {
 
         String expectedPattern = "1 1 1"+"\n"+"1 1 1"+"\n"+"1 1 1";
         assertEquals(expectedPattern,world.getCellsPattern());
-
+//        System.out.println(world.getCellsPattern());
+//        for(int i = 0;i<3;i++){
+//            System.out.println();
+//            world.operate();
+//            System.out.println(world.getCellsPattern());
+//        }
 
     }
 }

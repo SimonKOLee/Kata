@@ -2,17 +2,20 @@ package kata;
 
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class World {
     private int width;
     private int height;
     List<Cell> cells;
+    private String[][] cellsPattern;
 
     public World(int width, int height) {
         this.width = width;
         this.height = height;
         cells = new ArrayList<>();
+        cellsPattern = new String[width][height];
     }
 
     public void operate() {
@@ -78,6 +81,25 @@ public class World {
 
 
     public String getCellsPattern() {
-        return "";
+        for(Cell cell:cells){
+            cellsPattern[cell.getPosition().x][cell.getPosition().y]=cell.toString();
+        }
+        String result = "";
+        for(int i=0;i<cellsPattern.length;i++){
+            for(int j=0;j<cellsPattern[i].length;j++){
+                if(cellsPattern[i][j]==null){
+                    result += "-";
+                }else{
+                    result += cellsPattern[i][j];
+                }
+                if(j!=cellsPattern[i].length-1){
+                    result +=" ";
+                }
+            }
+            if(i!=cellsPattern.length-1){
+                result +="\n";
+            }
+        }
+        return result;
     }
 }

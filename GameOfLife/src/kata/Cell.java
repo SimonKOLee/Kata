@@ -22,4 +22,8 @@ public class Cell {
         return position;
     }
 
+    @Override
+    public String toString() {
+        return isAlive?"1":"0";
+    }
 }
