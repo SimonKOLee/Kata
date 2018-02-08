@@ -340,13 +340,13 @@ public class WorldTest {
         world.add(new Cell(),new Position(2,1));
         world.add(new Cell(),new Position(2,2));
 
-        String expectedPattern = "1 1 1"+"\n"+"1 1 1"+"\n"+"1 1 1";
-        assertEquals(expectedPattern,world.getCellsPattern());
-//        System.out.println(world.getCellsPattern());
+        String expectedWorldMap = "1 1 1"+"\n"+"1 1 1"+"\n"+"1 1 1";
+        assertEquals(expectedWorldMap,world.displayCellWorld());
+//        System.out.println(world.displayCellWorld());
 //        for(int i = 0;i<3;i++){
 //            System.out.println();
 //            world.operate();
-//            System.out.println(world.getCellsPattern());
+//            System.out.println(world.displayCellWorld());
 //        }
 
     }

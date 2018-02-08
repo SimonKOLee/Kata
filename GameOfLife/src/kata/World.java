@@ -2,34 +2,30 @@ package kata;
 
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class World {
     private int width;
     private int height;
     List<Cell> cells;
-    private String[][] cellsPattern;
+    private String[][] cellWorld;
 
     public World(int width, int height) {
         this.width = width;
         this.height = height;
         cells = new ArrayList<>();
-        cellsPattern = new String[width][height];
+        cellWorld = new String[width][height];
     }
 
     public void operate() {
         if(cells.isEmpty()) return;
         List<Cell> cellsBeingAlive = new ArrayList<>();
         List<Cell> cellsBeingDead = new ArrayList<>();
-
         for(Cell cell:cells){
-            if(cell.isAlive()
-                    &&(countLivingNeighbours(cell)<2||countLivingNeighbours(cell)>3)){
+            if(cell.isAlive()&&(countLivingNeighbours(cell)<2||countLivingNeighbours(cell)>3)){
                 cellsBeingDead.add(cell);
             }
-            if((!cell.isAlive())
-                    &&countLivingNeighbours(cell)==3){
+            if((!cell.isAlive())&&countLivingNeighbours(cell)==3){
                 cellsBeingAlive.add(cell);
             }
         }
@@ -67,39 +63,47 @@ public class World {
     }
 
     public void add(Cell newCell, Position position) {
-        if((position.y>this.height-1||position.y<0)||(position.x>this.width-1||position.x<0)){
+        if(isOutsideTheWorld(position)){
             throw new PositionOutsideTheWorldException();
         }
-        for(Cell cell:cells){
-            if(cell.getPosition().x==position.x&&cell.getPosition().y == position.y){
-                throw new PositionOccupliedException();
-            }
+        if(isOccupied(position)){
+            throw new PositionOccupliedException();
         }
         newCell.setPosition(position);
+        cellWorld[newCell.getPosition().x][newCell.getPosition().y]=newCell.toString();
         cells.add(newCell);
     }
 
+    private boolean isOccupied(Position position) {
+        return cellWorld[position.x][position.y]!=null;
+    }
 
-    public String getCellsPattern() {
-        for(Cell cell:cells){
-            cellsPattern[cell.getPosition().x][cell.getPosition().y]=cell.toString();
-        }
+    private boolean isOutsideTheWorld(Position position) {
+        return (position.y>this.height-1||position.y<0)||(position.x>this.width-1||position.x<0);
+    }
+
+
+    public String displayCellWorld() {
         String result = "";
-        for(int i=0;i<cellsPattern.length;i++){
-            for(int j=0;j<cellsPattern[i].length;j++){
-                if(cellsPattern[i][j]==null){
+        for(int i = 0; i< cellWorld.length; i++){
+            for(int j = 0; j< cellWorld[i].length; j++){
+                if(cellWorld[i][j]==null){
                     result += "-";
                 }else{
-                    result += cellsPattern[i][j];
+                    result += cellWorld[i][j];
                 }
-                if(j!=cellsPattern[i].length-1){
+                if(j!= cellWorld[i].length-1){
                     result +=" ";
                 }
             }
-            if(i!=cellsPattern.length-1){
+            if(i!= cellWorld.length-1){
                 result +="\n";
             }
         }
         return result;
+    }
+
+    public String[][] getCellWorld() {
+        return cellWorld;
     }
 }
