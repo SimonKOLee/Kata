@@ -10,73 +10,74 @@ import static org.junit.Assert.*;
 public class WorldTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+
     /**
      * Given a 1x1 world and a cell living in the world
-     * When the world operate
+     * When the world evolve
      * Then the cell should be dead
      */
     @Test
-    public void testGiven1x1WorldAnd1LiveCellWhenTheWorldOperateThenTheCellShouldBeDead(){
+    public void testUnderPopulation_Given1x1WorldAnd1LiveCell_WhenTheWorldEvolve_ThenTheCellShouldBeDead(){
         World world = new World(1,1);
         Cell cell = new Cell();
         world.add(cell, new Position(0,0));
-        world.operate();
+        world.evolve();
         assertFalse(cell.isAlive());
     }
 
     /**
      * Given a 1x1 world and a dead cell  in the world
-     * When the world operate
+     * When the world evolve
      * Then the cell should be dead
      */
     @Test
-    public void testGiven1x1WorldAnd1DeadCellWhenTheWorldOperateThenTheCellShouldBeDead(){
+    public void testUnderPopulation_Given1x1WorldAnd1DeadCell_WhenTheWorldEvolve_ThenTheCellShouldBeDead(){
         World world = new World(1,1);
         Cell cell = new Cell();
         cell.setAlive(false);
         world.add(cell, new Position(0,0));
-        world.operate();
+        world.evolve();
         assertFalse(cell.isAlive());
     }
 
     /**
      * Given a 1x2 world and a cell lives in world at position(0,0)
-     * When the world operate
+     * When the world evolve
      * Then the cell should be dead
      */
     @Test
-    public void testGiven1x2WorldAnd1LiveCellWhenTheWorldOperateThenTheCellShouldBeDead(){
+    public void testUnderPopulation_Given1x2WorldAnd1LiveCell_WhenTheWorldEvolve_ThenTheCellShouldBeDead(){
         World world = new World(1,2);
         Cell cell = new Cell();
         world.add(cell,new Position(0,0));
-        world.operate();
+        world.evolve();
         assertFalse(cell.isAlive());
     }
 
     /**
      * Given a 1x2 world and two cells live in world at position(0,0) and (0,1)
-     * When the world operate
+     * When the world evolve
      * Then two cells should be dead
      */
     @Test
-    public void testGiven1x2WorldAnd2LiveCellAt00And01WhenTheWorldOperateThen2CellsShouldBeDead(){
+    public void testUnderPopulation_Given1x2WorldAnd2LiveCellAt00And01_WhenTheWorldEvolve_Then2CellsShouldBeDead(){
         World world = new World(1,2);
         Cell cellA = new Cell();
         Cell cellB = new Cell();
         world.add(cellA,new Position(0,0));
         world.add(cellB,new Position(0,1));
-        world.operate();
+        world.evolve();
         assertFalse(cellA.isAlive());
         assertFalse(cellB.isAlive());
     }
 
     /**
-     * Given a 1x3 world and cellA live at (0,0) and CellB at (0,1) and CellC at(0,2)
-     * When the world operate
-     * Then cellA should be dead, cellB should be alive and cellC should be dead
+     * Given a 1x3 world and alive CellB at (0,1) has two alive neighbours CellA at (0,0) and CellC at (0,2)
+     * When the world evolve
+     * Then cellB should be alive; CellA and cellC should be dead
      */
     @Test
-    public void testGiven1x3WorldAndLiveCellA00AndLiveCellB01AndLiveCellC02WhenTheWorldOperateThenCellADeadCellBAliveCellCDead(){
+    public void testCellLiveWith2Neighbours_Given1x3WorldAndAliveCellB01With2AliveNeighboursCellA00AndCellC02_WhenTheWorldEvolve_ThenCellBAliveCellADeadCellCDead(){
         World world = new World(1,3);
         Cell cellA = new Cell();
         Cell cellB = new Cell();
@@ -84,19 +85,19 @@ public class WorldTest {
         world.add(cellA,new Position(0,0));
         world.add(cellB,new Position(0,1));
         world.add(cellC,new Position(0,2));
-        world.operate();
+        world.evolve();
         assertFalse(cellA.isAlive());
         assertTrue(cellB.isAlive());
         assertFalse(cellC.isAlive());
     }
 
     /**
-     * Given a 1x3 world and cellA die at (0,0) and CellB live at (0,1) and CellC live at(0,2)
-     * When the world operate
-     * Then cellA should be dead, cellB should be alive and cellC should be dead
+     * Given a 1x3 world and alive CellB at (0,1) has two neighbours dead CellA at (0,0) and alive CellC at(0,2)
+     * When the world evolve
+     * Then all cell should be dead
      */
     @Test
-    public void testGiven1x3WorldAndDeadCellA00AndLiveCellB01AndLiveCellC02WhenTheWorldOperateThenCellADeadCellBADeadCellCDead(){
+    public void testCellLiveWith2Neighbours_Given1x3WorldAndLiveCellB01HasTwoNeighboursDeadCellA00AndLiveCellC02_WhenTheWorldEvolve_ThenAllCellDead(){
         World world = new World(1,3);
         Cell cellA = new Cell();
         cellA.setAlive(false);
@@ -105,7 +106,9 @@ public class WorldTest {
         world.add(cellA,new Position(0,0));
         world.add(cellB,new Position(0,1));
         world.add(cellC,new Position(0,2));
-        world.operate();
+
+        world.evolve();
+
         assertFalse(cellA.isAlive());
         assertFalse(cellB.isAlive());
         assertFalse(cellC.isAlive());
@@ -117,28 +120,28 @@ public class WorldTest {
      * Then exception thrown
      */
     @Test
-    public void testCellLivingAtThePositionExceedTheMaxHeightOfTheWorldThenThrowException(){
+    public void testAddCellToThePositionExceedTheMaxHeightOfTheWorld_ThenThrowException(){
         thrown.expect(PositionOutsideTheWorldException.class);
         World world = new World(1,1);
         Cell cell = new Cell();
         world.add(cell,new Position(0,1));
     }
     @Test
-    public void testCellLivingAtThePositionLessThanTheMinHeightOfTheWorldThenThrowException(){
+    public void testAddCellToThePositionLessThanTheMinHeightOfTheWorld_ThenThrowException(){
         thrown.expect(PositionOutsideTheWorldException.class);
         World world = new World(1,1);
         Cell cell = new Cell();
         world.add(cell,new Position(0,-1));
     }
     @Test
-    public void testCellLivingAtThePositionExceedTheMaxWidthOfTheWorldThenThrowException(){
+    public void testAddCellLivingToThePositionExceedTheMaxWidthOfTheWorld_ThenThrowException(){
         thrown.expect(PositionOutsideTheWorldException.class);
         World world = new World(1,1);
         Cell cell = new Cell();
         world.add(cell,new Position(1,0));
     }
     @Test
-    public void testCellLivingAtThePositionLessThanTheMinWidthOfTheWorldThenThrowException(){
+    public void testAddCellToThePositionLessThanTheMinWidthOfTheWorld_ThenThrowException(){
         thrown.expect(PositionOutsideTheWorldException.class);
         World world = new World(1,1);
         Cell cell = new Cell();
@@ -151,7 +154,7 @@ public class WorldTest {
      * Then PositionOccupiedException will be thrown
      */
     @Test
-    public void testPositionOccupiedException(){
+    public void testAddCellToThePositionOccupied_ThenThrowException(){
         thrown.expect(PositionOccupliedException.class);
         World world = new World(1,1);
         Cell cellA = new Cell();
@@ -161,12 +164,12 @@ public class WorldTest {
     }
 
     /**
-     * Given a 3x1 world and cellA live at (0,0) and CellB at (1,0) and CellC at(2,0)
-     * When the world operate
-     * Then cellA should be dead, cellB should be alive and cellC should be dead
+     * Given a 3x1 world and alive CellB at (1,0) has two alive neighbours CellA at (0,0) and CellC at(2,0)
+     * When the world evolve
+     * Then cellB should be alive; cellA and cellC should be dead
      */
     @Test
-    public void testGiven3x1WorldAndLiveCellA00AndLiveCellB10AndLiveCellC20WhenTheWorldOperateThenCellADeadCellBAliveCellCDead(){
+    public void testCellLiveWith2Neighbours_Given3x1WorldAndAliveCellB10With2AliveNeighboursCellA00AndCellC20_WhenTheWorldEvolve_ThenCellBAliveCellADeadCellCDead(){
         World world = new World(3,1);
         Cell cellA = new Cell();
         Cell cellB = new Cell();
@@ -174,19 +177,19 @@ public class WorldTest {
         world.add(cellA,new Position(0,0));
         world.add(cellB,new Position(1,0));
         world.add(cellC,new Position(2,0));
-        world.operate();
+        world.evolve();
         assertFalse(cellA.isAlive());
         assertTrue(cellB.isAlive());
         assertFalse(cellC.isAlive());
     }
 
     /**
-     * Given a 3x1 world and cellA die at (0,0) and CellB live at (1,0) and CellC live at(2,0)
-     * When the world operate
-     * Then cellA should be dead, cellB should be alive and cellC should be dead
+     * Given a 3x1 world and alive CellB at (1,0) has two neighbours dead CellA at (0,0) and alive CellC at(2,0)
+     * When the world evolve
+     * Then all cell should be dead
      */
     @Test
-    public void testGiven3x1WorldAndDeadCellA00AndLiveCellB10AndLiveCellC20WhenTheWorldOperateThenCellADeadCellBADeadCellCDead(){
+    public void testCellLiveWith2Neighbours_Given3x1WorldAndLiveCellB10HasTwoNeighboursDeadCellA00AndLiveCellC20_WhenTheWorldEvolve_ThenAllCellDead(){
         World world = new World(3,1);
         Cell cellA = new Cell();
         cellA.setAlive(false);
@@ -195,19 +198,19 @@ public class WorldTest {
         world.add(cellA,new Position(0,0));
         world.add(cellB,new Position(1,0));
         world.add(cellC,new Position(2,0));
-        world.operate();
+        world.evolve();
         assertFalse(cellA.isAlive());
         assertFalse(cellB.isAlive());
         assertFalse(cellC.isAlive());
     }
 
     /**
-     * Given a 2x2 world and  cellA live at position(0,0) and  CellB live at position (0,1)  and CellC live at position (1,1) in the world
-     * When the world operate
+     * Given a 2x2 world and  alive CellA at (0,0) has two alive neighbours CellB at (0,1) and CellC  at  (1,1)
+     * When the world evolve
      * Then  all cells should be alive
      */
     @Test
-    public void testGiven2x2WorldAndCellAliveAt00AndCellBLiveAt01CellCLiveAt11WhenTheWorldOperateThen3CellsShouldBeAlive(){
+    public void testCellLiveWith2Neighbours_Given2x2WorldAndAliveCellAt00HasTwoAliveNeighboursCellBAt01AndCellCAt11_WhenTheWorldEvolve_ThenAllCellsShouldBeAlive(){
         World world = new World(2,2);
         Cell cellA = new Cell();
         Cell cellB = new Cell();
@@ -215,19 +218,20 @@ public class WorldTest {
         world.add(cellA,new Position(0,0));
         world.add(cellB,new Position(0,1));
         world.add(cellC,new Position(1,1));
-        world.operate();
-        assertTrue("Cell A",cellA.isAlive());
-        assertTrue("Cell B",cellB.isAlive());
-        assertTrue("Cell C",cellC.isAlive());
+        world.evolve();
+        assertTrue(cellA.isAlive());
+        assertTrue(cellB.isAlive());
+        assertTrue(cellC.isAlive());
     }
 
+
     /**
-     * Given a 2x2 world and  cellA live at position(0,0) and  CellB live at position (1,0)  and CellC live at position (0,1) in the world
-     * When the world operate
+     * Given a 2x2 world and  alive CellA at (0,0) has two alive neighbours CellB at (1,0) and CellC  at  (0,1)
+     * When the world evolve
      * Then  all cells should be alive
      */
     @Test
-    public void testGiven2x2WorldAndCellAliveAt00AndCellBLiveAt10CellCLiveAt01WhenTheWorldOperateThen3CellsShouldBeAlive(){
+    public void testCellLiveWith2Neighbours_Given2x2WorldAndAliveCellAt00HasTwoAliveNeighboursCellBAt10AndCellCAt01_WhenTheWorldEvolve_ThenAllCellsShouldBeAlive(){
         World world = new World(2,2);
         Cell cellA = new Cell();
         Cell cellB = new Cell();
@@ -235,19 +239,19 @@ public class WorldTest {
         world.add(cellA,new Position(0,0));
         world.add(cellB,new Position(1,0));
         world.add(cellC,new Position(0,1));
-        world.operate();
-        assertTrue("Cell A",cellA.isAlive());
-        assertTrue("Cell B",cellB.isAlive());
-        assertTrue("Cell C",cellC.isAlive());
+        world.evolve();
+        assertTrue(cellA.isAlive());
+        assertTrue(cellB.isAlive());
+        assertTrue(cellC.isAlive());
     }
 
     /**
-     * Given a 2x2 world and  cellA live at position(0,0) and  CellB live at position (1,0)  and CellC live at position (0,1) in the world and CellD die at (1,1)
-     * When the world operate
+     * Given a 2x2 world and  dead CellD live at (1,1) has 3 alive neighbours CellA at (0,0) and CellB at (1,0)  and CellC
+     * When the world evolve
      * Then  all cells should be alive
      */
     @Test
-    public void testGiven2x2WorldAndCellAliveAt00AndCellBLiveAt10CellCLiveAt01CellDDieAt11WhenTheWorldOperateThenAllCellsShouldBeAlive(){
+    public void testReproduction_Given2x2WorldAndAliveCellDAt11Has3AliveNeighboursCellAAt00CellBAt10CellCAt01_WhenTheWorldEvolve_ThenAllCellsShouldBeAlive(){
         World world = new World(2,2);
         Cell cellA = new Cell();
         Cell cellB = new Cell();
@@ -260,20 +264,20 @@ public class WorldTest {
         world.add(cellC,new Position(0,1));
         world.add(cellD,new Position(1,1));
 
-        world.operate();
+        world.evolve();
 
-        assertTrue("Cell A",cellA.isAlive());
-        assertTrue("Cell B",cellB.isAlive());
-        assertTrue("Cell C",cellC.isAlive());
-        assertTrue("Cell D",cellD.isAlive());
+        assertTrue(cellA.isAlive());
+        assertTrue(cellB.isAlive());
+        assertTrue(cellC.isAlive());
+        assertTrue(cellD.isAlive());
     }
     /**
-     * Given a 2x2 world and  cellA live at position(0,0) and  CellB live at position (1,0)  and CellC live at position (0,1) in the world and CellD live at (1,1)
-     * When the world operate
+     * Given a 2x2 world and  alive CellA at (0,0)  has 3 alive neighbours CellB  at (1,0)  and CellC at (0,1) and CellD at (1,1)
+     * When the world evolve
      * Then  all cells should be alive
      */
     @Test
-    public void testGiven2x2WorldAndCellAliveAt00AndCellBLiveAt10CellCLiveAt01CellDLiveAt11WhenTheWorldOperateThenAllCellsShouldBeAlive(){
+    public void testCellLiveWith3Neighours_Given2x2WorldAndAliveCellAAt00Has3AliveNeighboursCellBAt10CellCAt01CellDAt11_WhenTheWorldEvolve_ThenAllCellsShouldBeAlive(){
         World world = new World(2,2);
         Cell cellA = new Cell();
         Cell cellB = new Cell();
@@ -285,25 +289,22 @@ public class WorldTest {
         world.add(cellC,new Position(0,1));
         world.add(cellD,new Position(1,1));
 
-        world.operate();
+        world.evolve();
 
-        assertTrue("Cell A",cellA.isAlive());
-        assertTrue("Cell B",cellB.isAlive());
-        assertTrue("Cell C",cellC.isAlive());
-        assertTrue("Cell D",cellD.isAlive());
+        assertTrue(cellA.isAlive());
+        assertTrue(cellB.isAlive());
+        assertTrue(cellC.isAlive());
+        assertTrue(cellD.isAlive());
     }
 
 
     /**
-     * 1,1,1
-     * 1,1,-
-     *
-     * Given a 3x2 world and  cellA live at (0,0) and  CellB live at  (1,0)  and CellC live at  (2,0) and CellD live at (1,1) and  CellE live at (1.2)
-     * When the world operate
-     * Then  all  CellB and CellE should be dead
+     * Given a 3x2 world and  alive CellE at (1,2)  has 4 alive neighbours CellA at (0,0) and CellB at  (1,0)  and CellC  at  (2,0) and CellD  at (1,1)
+     * When the world evolve
+     * Then  CellE and CellB should be dead;other cells should be alive
      */
     @Test
-    public void testGiven3x2WorldAndCellAliveAt00AndCellBLiveAt10CellCLiveAt01CellDLiveAt11CellEliveAt12WhenTheWorldOperateThenAllCellsShouldBeAlive(){
+    public void testOvercrowding_Given3x2WorldAndAliveCellEAt11Has4AliveNeighboursCellAAt00CellBAt10CellCAt01CellDAt11_WhenTheWorldEvolve_ThenCellEAndCellBShouldBeDead(){
         World world = new World(3,2);
         Cell cellA = new Cell();
         Cell cellB = new Cell();
@@ -317,18 +318,62 @@ public class WorldTest {
         world.add(cellD,new Position(0,1));
         world.add(cellE,new Position(1,1));
 
-        world.operate();
+        world.evolve();
 
-        assertTrue("Cell A",cellA.isAlive());
-        assertFalse("Cell B",cellB.isAlive());
-        assertTrue("Cell C",cellC.isAlive());
-        assertTrue("Cell D",cellD.isAlive());
-        assertFalse("Cell E",cellE.isAlive());
+        assertTrue(cellA.isAlive());
+        assertFalse(cellB.isAlive());
+        assertTrue(cellC.isAlive());
+        assertTrue(cellD.isAlive());
+        assertFalse(cellE.isAlive());
+    }
 
+    /**
+     * Given a 3x2 world and  alive CellE at (1,2)  has 5 alive neighbours CellA at (0,0) and CellB at  (1,0)  and CellC  at  (2,0) and CellD  at (1,1) and CellF at (2,1)
+     * When the world evolve
+     * Then  CellE and CellB should be dead;other cells should be alive
+     */
+    @Test
+    public void testOvercrowding_Given3x2WorldAndAliveCellEAt11Has5AliveNeighboursCellAAt00CellBAt10CellCAt01CellDAt11CellFAt21_WhenTheWorldEvolve_ThenCellEAndCellBShouldBeDead(){
+        World world = new World(3,2);
+        Cell cellA = new Cell();
+        Cell cellB = new Cell();
+        Cell cellC = new Cell();
+        Cell cellD = new Cell();
+        Cell cellE = new Cell();
+        Cell cellF = new Cell();
+
+        world.add(cellA,new Position(0,0));
+        world.add(cellB,new Position(1,0));
+        world.add(cellC,new Position(2,0));
+        world.add(cellD,new Position(0,1));
+        world.add(cellE,new Position(1,1));
+        world.add(cellF,new Position(2,1));
+
+        world.evolve();
+
+        assertTrue(cellA.isAlive());
+        assertFalse(cellB.isAlive());
+        assertTrue(cellC.isAlive());
+        assertTrue(cellD.isAlive());
+        assertFalse(cellE.isAlive());
+        assertTrue(cellF.isAlive());
+    }
+
+    /**
+     * Given a 1x1 world and no cell in the world
+     * When display cell world
+     * Then  "-" should be displayed
+     */
+    @Test
+    public void testDiplayCellWorld_Given1x1WorldAndNoCell_WhenDiplayCellWorld_ThenEmpty1x1WorldShouldBeDisplayed(){
+        World world = new World(1,1);
+        String actualCellWorld = world.displayCellWorld();
+        String expectedCellWorld = World.NO_CELL;
+        assertEquals(expectedCellWorld,actualCellWorld);
     }
 
     @Test
-    public void testShowCells(){
+    public void testDisplay3x3CellWorldWithFullAliveCells(){
         World world = new World(3,3);
         world.add(new Cell(),new Position(0,0));
         world.add(new Cell(),new Position(0,1));
@@ -342,13 +387,6 @@ public class WorldTest {
 
         String expectedWorldMap = "1 1 1"+"\n"+"1 1 1"+"\n"+"1 1 1";
         assertEquals(expectedWorldMap,world.displayCellWorld());
-//        System.out.println(world.displayCellWorld());
-//        for(int i = 0;i<3;i++){
-//            System.out.println();
-//            world.operate();
-//            System.out.println(world.displayCellWorld());
-//        }
-
     }
 }
 

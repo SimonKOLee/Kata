@@ -2,9 +2,12 @@ package kata;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class World {
+    public static final String NO_CELL = "-";
     private int width;
     private int height;
     List<Cell> cells;
@@ -14,28 +17,43 @@ public class World {
         this.width = width;
         this.height = height;
         cells = new ArrayList<>();
-        cellWorld = new String[width][height];
+        initializeCellWorld(width, height);
     }
 
-    public void operate() {
+    private void initializeCellWorld(int width, int height) {
+        cellWorld = new String[width][height];
+        for(String[] cellWorldRow:cellWorld){
+            Arrays.fill(cellWorldRow,NO_CELL);
+        }
+    }
+
+    public void evolve() {
         if(cells.isEmpty()) return;
         List<Cell> cellsBeingAlive = new ArrayList<>();
         List<Cell> cellsBeingDead = new ArrayList<>();
         for(Cell cell:cells){
-            if(cell.isAlive()&&(countLivingNeighbours(cell)<2||countLivingNeighbours(cell)>3)){
+            if(isUnderPopulation(cell) || isOvercrowding(cell)){
                 cellsBeingDead.add(cell);
             }
-            if((!cell.isAlive())&&countLivingNeighbours(cell)==3){
+            if(isReproduction(cell)){
                 cellsBeingAlive.add(cell);
             }
         }
+        cellsBeingAlive.stream().forEach(cell->cell.setAlive(true));
+        cellsBeingDead.stream().forEach(cell->cell.setAlive(false));
 
-        for(Cell cell:cellsBeingAlive){
-            cell.setAlive(true);
-        }
-        for(Cell cell:cellsBeingDead){
-            cell.setAlive(false);
-        }
+    }
+
+    private boolean isReproduction(Cell cell) {
+        return (!cell.isAlive())&&countLivingNeighbours(cell)==3;
+    }
+
+    private boolean isOvercrowding(Cell cell) {
+        return cell.isAlive()&&countLivingNeighbours(cell)>3;
+    }
+
+    private boolean isUnderPopulation(Cell cell) {
+        return cell.isAlive()&&countLivingNeighbours(cell)<2;
     }
 
     private int countLivingNeighbours(Cell targetCell) {
@@ -50,6 +68,7 @@ public class World {
         }
         return neighbourCount;
     }
+
 
     private boolean isNeighbour(Cell targetCell, Cell cell) {
         return (cell.getPosition().y == targetCell.getPosition().y-1 && cell.getPosition().x ==targetCell.getPosition().x)
@@ -73,9 +92,8 @@ public class World {
         cellWorld[newCell.getPosition().x][newCell.getPosition().y]=newCell.toString();
         cells.add(newCell);
     }
-
     private boolean isOccupied(Position position) {
-        return cellWorld[position.x][position.y]!=null;
+        return cellWorld[position.x][position.y]!= NO_CELL;
     }
 
     private boolean isOutsideTheWorld(Position position) {
@@ -84,26 +102,15 @@ public class World {
 
 
     public String displayCellWorld() {
-        String result = "";
-        for(int i = 0; i< cellWorld.length; i++){
-            for(int j = 0; j< cellWorld[i].length; j++){
-                if(cellWorld[i][j]==null){
-                    result += "-";
-                }else{
-                    result += cellWorld[i][j];
-                }
-                if(j!= cellWorld[i].length-1){
-                    result +=" ";
-                }
+        StringBuilder result = new StringBuilder();
+        for(String[] cellWorldRow:cellWorld){
+            for(String content:cellWorldRow){
+                result.append(content).append(" ");
             }
-            if(i!= cellWorld.length-1){
-                result +="\n";
-            }
+            result.deleteCharAt(result.length()-1);
+            result.append("\n");
         }
-        return result;
-    }
-
-    public String[][] getCellWorld() {
-        return cellWorld;
+        result.deleteCharAt(result.length()-1);
+        return result.toString();
     }
 }

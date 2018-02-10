@@ -1,6 +1,8 @@
 package kata;
 
 public class Cell {
+    public static final String LIVING_CELL = "1";
+    public static final String DEAD_CELL = "0";
     private boolean isAlive;
     private Position position;
     public Cell(){
@@ -24,6 +26,6 @@ public class Cell {
 
     @Override
     public String toString() {
-        return isAlive?"1":"0";
+        return isAlive?LIVING_CELL:DEAD_CELL;
     }
 }
