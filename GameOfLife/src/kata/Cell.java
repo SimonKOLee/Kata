@@ -8,9 +8,6 @@ public class Cell {
     public Cell(){
         isAlive = true;
     }
-    public Cell(Boolean isAlive){
-        isAlive = isAlive;
-    }
     public boolean isAlive() {
         return isAlive;
     }
